@@ -25,15 +25,15 @@
 
 <div
 	on:click={onclick}
-	class=" mb-3 py-3 px-4 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
+	class="h-[68px] mb-3 py-3 px-4 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
 >
 	<div class="">
 		{#if name}
-			<div class="text-primaryOrange mb-1">
+			<div class="text-textDark text-sm mb-1">
 				{name}
 			</div>
 		{:else}
-			<div class="text-textLight mb-1">Unnamed startup</div>
+			<div class="text-textLight text-sm mb-1">Unnamed startup</div>
 		{/if}
 
 		{#if totalRaised > 0}
@@ -48,7 +48,7 @@
 <button
 	on:mouseleave={() => (showConfirm = false)}
 	class={cn(
-		'transition-none right-[0] text-textLight top-[3px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute',
+		'transition-none right-[0] text-textLight top-[14px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute',
 		showConfirm && ' text-xs right-[-40px]'
 	)}
 	on:click={showConfirm
