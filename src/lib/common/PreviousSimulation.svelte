@@ -28,16 +28,16 @@
 	class=" mb-3 py-3 px-4 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
 >
 	<div class="">
-		<!-- {sim.name ? sim.name + ' • ' : ''} -->
-		<!-- {sim.exit ? `Exited for ${formatAmount(sim.exit.amount)}` : ''} -->
 		{#if name}
-			{name}
+			<div class="text-primaryOrange mb-1">
+				{name}
+			</div>
 		{:else}
-			<span class="text-textLight">Unnamed startup</span>
+			<div class="text-textLight mb-1">Unnamed startup</div>
 		{/if}
 
 		{#if totalRaised > 0}
-			<span class="mx-1">•</span> Raised {formatAmount(totalRaised)}
+			Raised {formatAmount(totalRaised)}
 		{/if}
 
 		{#if exit}
