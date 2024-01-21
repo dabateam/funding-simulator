@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--background-color: #f5f5ee;
+		--border-dark: #e2e2cf;
+		--border-dark-hover: #cfcfb0;
+		--text-dark: #30301c;
+		--blue: #0c8ce9;
+	}
+}
+
+/* app classes */
+
+.input-shadow {
+	box-shadow: inset 0px 1.5px var(--border-dark);
+}
+
+.input-shadow:focus,
+.with-focus-ring:focus {
+	box-shadow: 0px 0px 0px 1px #0c8de9;
+	border-color: var(--blue);
+}
+
+.button-shadow {
+	box-shadow: 0px 1px var(--border-dark-hover);
+}
+
+.primary-button {
+	box-shadow: 0px 1px #af3a03;
+}
+
+.primary-button:hover {
+	background: #fb5304;
+}
+
+.funding-box {
+	box-shadow:
+		0px 4px 20px 0px #e6e6db,
+		0px 1px 2px 2px #e5e5dc;
+}
+
+.menu-box {
+	box-shadow:
+		0px 10px 20px 0px #e6e6db,
+		0px 2px 2px 0px #e5e5dc;
+}
+
+/* --- */
+
+html .tippy-box {
+	background-color: black;
+	border-radius: 12px;
+	font-size: 12px;
+	padding: 2px 4px;
+	z-index: 999;
+}
+
+.tippy-box[data-animation='scale2'][data-state='hidden'][data-placement^='top'] {
+	opacity: 0;
+	transform: scale(0.93) translateY(3px);
+}
+
+.tippy-box[data-animation='scale2'][data-state='hidden'][data-placement^='bottom'] {
+	opacity: 0;
+	transform: scale(0.93) translateY(-3px);
+}
+
+.tippy-box[data-animation='scale2'][data-state='hidden'][data-placement^='left'] {
+	opacity: 0;
+	transform: scale(0.93) translateX(3px);
+}
+
+.tippy-box[data-animation='scale2'][data-state='hidden'][data-placement^='right'] {
+	opacity: 0;
+	transform: scale(0.93) translateX(-3px);
+}
+
+html {
+	font-family: 'Inter', sans-serif;
+	color: var(--text-dark);
+	background: var(--background-color);
+
+	cursor: default;
+	user-select: none;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+	min-width: 0;
+	transition: 0.1s all;
+	outline: none;
+}
+
+body {
+	line-height: 1.2;
+	-webkit-font-smoothing: antialiased;
+}
+
+#content {
+	min-height: 100vh;
+	background: var(--background-color);
+}
+
+html[data-theme='dark'] {
+	background: #1b1b15;
+}
+
+[data-theme='dark'] #content,
+[data-theme='dark'] .__invertable {
+	filter: invert(0.92) hue-rotate(180deg);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+	outline: none;
+}
+
+input {
+	cursor: default;
+}
+
+#root,
+#__next {
+	isolation: isolate;
+}
