@@ -51,26 +51,28 @@
 	{#if parsedSims.length > 0}
 		<div class="text-xs py-7 text-center">Previous simulations</div>
 
-		{#each parsedSims as sim, simIndex (sim.id)}
-			<div class="relative group px-11" animate:flip={{ duration: 250, easing: quintOut }}>
-				<PreviousSimulation
-					{sim}
-					ondelete={() => deleteSim(simIndex)}
-					onclick={() => {
-						$simId = sim.id;
-						$companyName = sim.name;
-						$founders = sim.founders;
-						$events = sim.events;
-						$exit = sim.exit;
-						$loadedData = true;
+		<div class="flex flex-col gap-3">
+			{#each parsedSims as sim, simIndex (sim.id)}
+				<div class="relative group px-11" animate:flip={{ duration: 250, easing: quintOut }}>
+					<PreviousSimulation
+						{sim}
+						ondelete={() => deleteSim(simIndex)}
+						onclick={() => {
+							$simId = sim.id;
+							$companyName = sim.name;
+							$founders = sim.founders;
+							$events = sim.events;
+							$exit = sim.exit;
+							$loadedData = true;
 
-						const url = new URL(window.location.href);
-						url.searchParams.set('data', previousSims[simIndex]);
-						window.history.pushState({}, '', url);
-					}}
-				/>
-			</div>
-		{/each}
+							const url = new URL(window.location.href);
+							url.searchParams.set('data', previousSims[simIndex]);
+							window.history.pushState({}, '', url);
+						}}
+					/>
+				</div>
+			{/each}
+		</div>
 	{/if}
 
 	<div class="flex-1 flex items-center pb-40 justify-center">
