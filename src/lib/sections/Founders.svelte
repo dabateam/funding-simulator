@@ -47,6 +47,11 @@
 			on:blur={(e) => {
 				$companyName = e.currentTarget.value;
 			}}
+			on:keydown={(e) => {
+				if (e.key === 'Enter') {
+					e.currentTarget.blur();
+				}
+			}}
 			class="w-[250px] text-primaryOrange focus:border-blue bg-transparent border-b-2 border-borderDark hover:border-borderDarkHover placeholder:text-textLight text-center py-3"
 			placeholder="Unnamed startup"
 		/>

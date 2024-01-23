@@ -128,13 +128,13 @@ const getOptions = ({
 }) => {
 	const options: CapTable = {};
 	if (event.reserved) {
-	const target = event.reserved / 100;
+		const target = event.reserved / 100;
 		options[AVAILABLE_OPTIONS_LABEL] = (target * total) / (1 - target);
 	}
 	if(event.amount) {
 		const target = event.amount / 100;
-		if (target <= parseFloat(((current[AVAILABLE_OPTIONS_LABEL] || 0) / total).toFixed(2))) {
-			const sharesToGrant = total * target;
+		if (target <= parseFloat((((current[AVAILABLE_OPTIONS_LABEL] || 0) + (options[AVAILABLE_OPTIONS_LABEL] || 0)) / total).toFixed(2))) {
+			const sharesToGrant = (total + (options[AVAILABLE_OPTIONS_LABEL] || 0)) * target;
 			options[EMPLOYEE_OPTIONS_LABEL] = (options[EMPLOYEE_OPTIONS_LABEL] || 0) + sharesToGrant;
 			options[AVAILABLE_OPTIONS_LABEL] = (options[AVAILABLE_OPTIONS_LABEL] || 0) - sharesToGrant;
 		}

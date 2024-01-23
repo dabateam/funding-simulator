@@ -61,17 +61,19 @@
 					{line.equity.toFixed(1)}%
 				</div>
 
-				{#if position > 0}
-					<div
-						class={cn(
-							'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
-							line.diff > 0 && 'text-green-600',
-							line.diff === 0 && '!opacity-0'
-						)}
-					>
+				<div
+					class={cn(
+						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
+						line.diff > 0 && 'text-green-600',
+						line.diff === 0 && 'text-textLight text-center'
+					)}
+				>
+					{#if line.diff === 0 || line.diff === -0}
+						—
+					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
 		{/each}
 		{#if investorsLines.length}
@@ -94,17 +96,19 @@
 					{line.equity.toFixed(1)}%
 				</div>
 
-				{#if position > 0}
-					<div
-						class={cn(
-							'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
-							line.diff > 0 && 'text-green-600',
-							line.diff === 0 && '!opacity-0'
-						)}
-					>
+				<div
+					class={cn(
+						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
+						line.diff > 0 && 'text-green-600',
+						line.diff === 0 && 'text-textLight text-center'
+					)}
+				>
+					{#if line.diff === 0 || line.diff === -0}
+						—
+					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
 		{/each}
 		{#if optionsLines.length}
@@ -127,17 +131,19 @@
 					{line.equity.toFixed(1)}%
 				</div>
 
-				{#if position > 0}
-					<div
-						class={cn(
-							'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
-							line.diff > 0 && 'text-green-600',
-							line.diff === 0 && '!opacity-0'
-						)}
-					>
+				<div
+					class={cn(
+						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
+						line.diff > 0 && 'text-green-600',
+						line.diff === 0 && 'text-textLight text-center'
+					)}
+				>
+					{#if line.diff === 0 || line.diff === -0}
+						—
+					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</div>
