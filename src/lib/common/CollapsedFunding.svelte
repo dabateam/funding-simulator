@@ -53,16 +53,38 @@
 		if (data.type === 'priced') {
 			includingSafes && included.push('Safes');
 			data.options && included.push('options');
-			data.participations.length > 0 && included.push('previous investors');
+			data.participations.length > 0 &&
+				(data.participations.length === 1
+					? included.push(data.participations[0] + ' pro-rata')
+					: included.push(data.participations.length + ' prev. investors'));
 		}
 		if (included.length === 1) {
 			return `(including ${included[0]})`;
 		} else if (included.length === 2) {
-			return `(including ${included[0]} & ${included[1]})`;
+			return `(incl. ${included[0]} & ${included[1]})`;
 		} else if (included.length === 3) {
-			return `(including ${included[0]}, ${included[1]} & ${included[2]})`;
+			return `(incl. ${included[0]}, ${included[1]} & ${included[2]})`;
 		}
 		return '';
+	};
+
+	$: getSafeLabel = () => {
+		if (data.type !== 'safe') return '';
+		let res = '';
+
+		if (data.discount && !data.valCap) {
+			res += 'Discount';
+		} else if (!data.discount && data.valCap) {
+			res += 'Valuation cap';
+		} else if (!data.discount && !data.valCap) {
+			res += 'Uncapped';
+		} else if (data.discount && data.valCap) {
+			res += 'Valuation cap & discount';
+		}
+		if (data.mfn) {
+			res += ' (MFN)';
+		}
+		return res;
 	};
 </script>
 
@@ -71,7 +93,11 @@
 	class=" transition-none duration-0 flex flex-col align-center justify-center group px-11"
 >
 	<div class={cn('text-center text-xs text-textLight my-2', sameNameError && 'text-red-500')}>
-		{sameNameError ? 'Error: Duplicate name' : data.type === 'priced' ? 'Priced round' : 'Safe'}
+		{sameNameError
+			? 'Error: Duplicate name'
+			: data.type === 'priced'
+				? 'Priced round'
+				: 'Safe - ' + getSafeLabel()}
 	</div>
 	<div
 		on:click
