@@ -61,6 +61,10 @@
 
 	let showProRata = false;
 
+	$: {
+		if (!show) showProRata = false;
+	}
+
 	const handleProRataClick = (investor: string) => {
 		if (data.type === 'priced') {
 			if (data.participations.includes(investor)) {
@@ -244,7 +248,7 @@
 							{/if}
 						</div>
 						<div class="text-sm text-textLight flex flex-col justify-between">
-							<div class="px-3 py-2 mb-3">
+							<div class="px-3 py-2 mb-3 text-sm">
 								New investors give you<br />
 								<span class="text-textDark">$10,000,000</span> and get
 								<span class="text-primaryOrange">55%</span>
@@ -253,19 +257,26 @@
 								<div
 									on:click={() => (showProRata = true)}
 									class={cn(
-										' flex items-center gap-4 hover:bg-borderLight cursor-pointer px-3 py-2 rounded-lg active:bg-borderDark'
+										'  text-sm flex items-center gap-4 hover:bg-borderLight cursor-pointer px-3 py-2 rounded-lg active:bg-borderDark'
 									)}
 								>
-									<div>
-										Pro-ratas: Old investors give you<br />
-										<span class="text-textDark">$1,000,000</span> and get
-										<span class="text-primaryOrange">5%</span>
-									</div>
+									{#if data.participations.length === 0}
+										<div>No previous investor invests <br />in this round (pro-rata)</div>
+									{:else}
+										<div>
+											{data.participations.length === 1
+												? `${previousInvestorsWithProRata[0]} investors `
+												: `Other investors`} give you<br />
+											<span class="text-textDark">$1,000,000</span> and get
+											<span class="text-primaryOrange">5%</span> (pro-rata)
+										</div>
+									{/if}
 									<svg
 										width="17"
 										height="17"
 										viewBox="0 0 17 17"
 										fill="none"
+										class="scale-75"
 										xmlns="http://www.w3.org/2000/svg"
 									>
 										<path
