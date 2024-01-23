@@ -25,30 +25,34 @@
 
 <div
 	on:click={onclick}
-	class="mb-3 py-2 px-3 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
+	class="py-2 px-3 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
 >
-	<div class="">
+	<div class="flex flex-col gap-1">
 		{#if name}
-			<div class="text-textDark text-sm mb-1">
+			<div class="text-textDark text-sm">
 				{name}
 			</div>
 		{:else}
-			<div class="text-textLight text-sm mb-1">Unnamed startup</div>
+			<div class="text-textLight text-sm">Unnamed startup</div>
 		{/if}
 
-		{#if totalRaised > 0}
-			Raised {formatAmount(totalRaised)}
-		{/if}
+		{#if totalRaised > 0 || exit}
+			<div>
+				{#if totalRaised > 0}
+					Raised {formatAmount(totalRaised)}
+				{/if}
 
-		{#if exit}
-			<span class="mx-1">•</span> Exited for {formatAmount(exit)}
+				{#if exit}
+					<span class="mx-1">•</span> Exited for {formatAmount(exit)}
+				{/if}
+			</div>
 		{/if}
 	</div>
 </div>
 <button
 	on:mouseleave={() => (showConfirm = false)}
 	class={cn(
-		'transition-none right-[0] text-textLight top-[14px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute',
+		'transition-none right-[0] text-textLight top-[50%] -translate-y-[50%] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute',
 		showConfirm && ' text-xs right-[-40px]'
 	)}
 	on:click={showConfirm
