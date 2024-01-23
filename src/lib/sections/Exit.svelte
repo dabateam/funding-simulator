@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { launchConfetti } from '$lib';
+	import { cn, formatAmount, launchConfetti } from '$lib';
 	import Button from '$lib/common/Button.svelte';
 	import Input from '$lib/common/Input.svelte';
 	import { events, exit } from '$lib/store';
 	import type { PricedRound } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 
 	let amount = 0;
+	$: pricedRounds = $events.filter((e) => e.type === 'priced') as PricedRound[];
+	$: lastPricedRound = pricedRounds[pricedRounds.length - 1];
+
 	onMount(() => {
-		const _events = get(events);
-		const lastPricedRound = _events.filter((e) => e.type === 'priced') as PricedRound[];
-		amount = lastPricedRound[lastPricedRound.length - 1].valuation * 2;
+		amount = lastPricedRound.valuation * 2;
 	});
 </script>
 
@@ -25,20 +25,30 @@
 			onchange={(val) => {
 				amount = parseInt(val);
 			}}
+			preventEmpty
 			width="200"
-			onkeypress={(e) => {
+			onkeypress={(e, val) => {
 				if (e.key === 'Enter') {
-					$exit && ($exit.amount = amount);
+					$exit && parseInt(val) >= lastPricedRound.valuation && ($exit.amount = parseInt(val));
+					e.currentTarget.blur();
 				}
 			}}
 		/>
 		<Button
 			onclick={() => {
-				$exit && ($exit.amount = amount);
+				$exit && amount >= lastPricedRound.valuation && ($exit.amount = amount);
 				launchConfetti();
 			}}
-			class="mt-7 bg-primaryOrange text-white border-none rounded-lg py-2 px-3 primary-button"
-			>Sell it!</Button
+			class={cn(
+				'mt-7 bg-primaryOrange text-white border-none rounded-lg py-2 px-3 primary-button',
+				amount < lastPricedRound.valuation && 'opacity-50 pointer-events-none'
+			)}>Sell it!</Button
 		>
+		{#if amount < lastPricedRound.valuation}
+			<div class="text-[11px] text-red-500 mt-3 -mb-3 text-center w-[190px]">
+				Sale price must be higher than last valuation ({formatAmount(lastPricedRound.valuation)}).
+				<br />Down rounds not supported (yet).
+			</div>
+		{/if}
 	</div>
 </div>

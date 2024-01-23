@@ -1,23 +1,33 @@
 <script lang="ts">
-	import { box, cn, selectContents } from '$lib';
+	import { box, cn, formatAmount, selectContents } from '$lib';
 	import Input from '$lib/common/Input.svelte';
 	import Select from '$lib/common/Select.svelte';
-	import type { PricedRound, Safe } from '$lib/types';
+	import type { CapTable, PricedRound, Safe } from '$lib/types';
 
 	import { onMount } from 'svelte';
 	import CollapsedFunding from '$lib/common/CollapsedFunding.svelte';
-	import { events } from '$lib/store';
+	import { events, tables } from '$lib/store';
 	import FloatingTable from './FloatingTable.svelte';
+	import {
+		AVAILABLE_OPTIONS_LABEL,
+		addTables,
+		getProRatas,
+		getSafes,
+		getTableTotalShares
+	} from '$lib/calculations';
 
 	export let data: PricedRound | Safe;
 	export let index: number;
 	let show = false;
 
+	$: isFirstPriced = $events.slice(0, index).filter((e) => e.type === 'priced').length === 0;
+
 	$: previousInvestorsWithProRata = (
-		$events.slice(0, index).filter((e) => e.type !== 'options' && e.proRata) as (
-			| PricedRound
-			| Safe
-		)[]
+		$events.slice(0, index).filter((e) => {
+			if (e.type === 'options' || !e.proRata) return false;
+			if (e.type === 'safe' && !isFirstPriced) return false;
+			return true;
+		}) as (PricedRound | Safe)[]
 	).map((i) => i.name);
 
 	$: sameNameError =
@@ -65,6 +75,34 @@
 		if (!show) showProRata = false;
 	}
 
+	$: handleNameChange = (
+		e: FocusEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) => {
+		const val = e.currentTarget.value;
+		if (!val || $events.map((e) => e.type !== 'options' && e.name).includes(val))
+			e.currentTarget.value = data.name;
+		else {
+			const oldName = data.name;
+			data.name = val;
+			events.update((prev) => {
+				return prev.map((e) => {
+					if (e.type !== 'priced') return e;
+					let participations = [...e.participations];
+					if (participations.includes(oldName)) {
+						participations[participations.indexOf(oldName)] = val;
+						participations.filter((p) => p !== oldName);
+					}
+					return {
+						...e,
+						participations
+					};
+				});
+			});
+		}
+	};
+
 	const handleProRataClick = (investor: string) => {
 		if (data.type === 'priced') {
 			if (data.participations.includes(investor)) {
@@ -74,6 +112,62 @@
 			}
 		}
 	};
+
+	let dilutions: {
+		total: number;
+		investors: number;
+		investorsPercent: number;
+		proratas: number;
+		proratasPercent: number;
+		safes: number;
+		options: number;
+	} | null = null;
+
+	$: {
+		if (data.type !== 'priced') dilutions = null;
+		else {
+			const currentTable = $tables[index + 1];
+			const previousTable = $tables[index];
+			const currentTotal = getTableTotalShares(currentTable);
+			const previousTotal = getTableTotalShares(previousTable);
+			const totalNewShares = currentTotal - previousTotal;
+
+			let safes: CapTable = {};
+			if (isFirstPriced) {
+				safes = getSafes(data, previousTotal);
+			}
+
+			const optionsNewShares =
+				(currentTable[AVAILABLE_OPTIONS_LABEL] || 0) -
+				(previousTable[AVAILABLE_OPTIONS_LABEL] || 0);
+
+			const proRatas = getProRatas({
+				current: addTables(previousTable, safes),
+				event: data,
+				newShares: totalNewShares - getTableTotalShares(safes) - optionsNewShares,
+				firstPricedRound: isFirstPriced,
+				total: previousTotal + getTableTotalShares(safes),
+				allEvents: $events.slice(0, index + 1)
+			});
+
+			const investorNewShares = (currentTable[data.name] || 0) - (previousTable[data.name] || 0);
+
+			const pricePerShare = data.valuation / currentTotal;
+
+			dilutions = {
+				total: (totalNewShares / currentTotal) * 100,
+				investors: investorNewShares * pricePerShare,
+				investorsPercent: (investorNewShares / currentTotal) * 100,
+				proratas: getTableTotalShares(proRatas) * pricePerShare,
+				proratasPercent: (getTableTotalShares(proRatas) / currentTotal) * 100,
+				safes: (getTableTotalShares(safes) / currentTotal) * 100,
+				options: (optionsNewShares / currentTotal) * 100
+			};
+		}
+	}
+
+	$: showOptionsLine = dilutions && dilutions.options > 0;
+	$: showSafesLine = dilutions && dilutions.safes > 0;
 </script>
 
 <div class="group relative flex flex-col items-center h-[120px] __event">
@@ -107,10 +201,7 @@
 					on:mouseup={(e) => {
 						e.preventDefault();
 					}}
-					on:blur={(e) => {
-						if (!e.currentTarget.value) e.currentTarget.value = data.name;
-						else data.name = e.currentTarget.value;
-					}}
+					on:blur={handleNameChange}
 					class={cn(
 						'bg-bg flex-1 block -ml-3 cursor-pointer with-focus-ring border border-transparent w-fit text-primaryOrange text-lg hover:bg-borderLight focus:bg-bg p-1 px-3 rounded-lg outline-none',
 						sameNameError && 'border border-red-500'
@@ -237,38 +328,77 @@
 
 			{#if data.type === 'priced'}
 				{#if !showProRata}
-					<div class="bg-bg flex items-center justify-center py-5 h-[160px] rounded-b-2xl">
-						<div>Total equity sold: <span class="text-primaryOrange mr-2">60%</span></div>
-						<div class="flex items-center w-[70px]">
-							<div class="border-b-2 border-borderDark flex-1" />
-							{#if previousInvestorsWithProRata.length > 0}
-								<div
-									class=" flex-1 h-[70px] border-2 border-borderDark rounded-xl border-r-0 rounded-r-none"
-								/>
-							{/if}
+					<div class="bg-bg flex items-center justify-center gap-4 py-5 h-[180px] rounded-b-2xl">
+						<div>
+							Total equity sold: <span class="text-primaryOrange mr-2"
+								>{dilutions?.total.toFixed(1)}%</span
+							>
 						</div>
-						<div class="text-sm text-textLight flex flex-col justify-between">
-							<div class="px-3 py-2 mb-3 text-sm">
-								New investors give you<br />
-								<span class="text-textDark">$10,000,000</span> and get
-								<span class="text-primaryOrange">55%</span>
+						<div
+							class="text-xs flex flex-col justify-between gap-0 border-2 border-borderDark rounded-xl"
+						>
+							<div
+								class="px-3 py-2 flex items-center justify-between gap-4 border-b-2 border-borderDark last:border-none"
+							>
+								<div class="">{data.name} investors</div>
+								<div class="flex">
+									<div class="w-[55px] text-right text-green-600 opacity-50">
+										+{formatAmount(Math.ceil(dilutions?.investors || 0))}
+									</div>
+
+									<div class="w-[55px] text-right text-primaryOrange">
+										-{dilutions?.investorsPercent.toFixed(1)}%
+									</div>
+								</div>
 							</div>
+							{#if showSafesLine}
+								<div
+									class="px-3 py-2 flex items-center justify-between gap-4 border-b-2 border-borderDark last:border-none text-textDark"
+								>
+									<div class="">Safes conversion</div>
+									<div class="flex">
+										<div class="w-[55px] text-right text-primaryOrange">
+											-{dilutions?.safes.toFixed(1)}%
+										</div>
+									</div>
+								</div>
+							{/if}
+
+							{#if showOptionsLine}
+								<div
+									class="px-3 py-2 flex items-center justify-between gap-4 border-b-2 border-borderDark last:border-none text-textDark"
+								>
+									<div class="">Options pool increase</div>
+									<div class="flex">
+										<div class="w-[55px] text-right text-primaryOrange">
+											-{dilutions?.options.toFixed(1)}%
+										</div>
+									</div>
+								</div>
+							{/if}
 							{#if previousInvestorsWithProRata.length > 0}
 								<div
 									on:click={() => (showProRata = true)}
 									class={cn(
-										'  text-sm flex items-center gap-4 hover:bg-borderLight cursor-pointer px-3 py-2 rounded-lg active:bg-borderDark'
+										'relative  hover:bg-borderLight cursor-pointer px-3 py-2 flex items-center justify-between gap-4 border-b-2 border-borderDark last:border-none rounded-[10px] rounded-t-none active:bg-borderDark pr-4'
 									)}
 								>
 									{#if data.participations.length === 0}
-										<div>No previous investor invests <br />in this round (pro-rata)</div>
+										<div>No pro-ratas exercised in this round.</div>
 									{:else}
-										<div>
+										<div class="">
 											{data.participations.length === 1
-												? `${previousInvestorsWithProRata[0]} investors `
-												: `Other investors`} give you<br />
-											<span class="text-textDark">$1,000,000</span> and get
-											<span class="text-primaryOrange">5%</span> (pro-rata)
+												? `${previousInvestorsWithProRata[0]} pro-rata `
+												: `${previousInvestorsWithProRata.length}x others (pro-rata)`}
+										</div>
+										<div class="flex">
+											<div class="w-[55px] text-right text-green-600 opacity-50">
+												+{formatAmount(Math.ceil(dilutions?.proratas || 0))}
+											</div>
+
+											<div class="w-[55px] text-right text-primaryOrange">
+												-{dilutions?.proratasPercent.toFixed(1)}%
+											</div>
 										</div>
 									{/if}
 									<svg
@@ -276,7 +406,7 @@
 										height="17"
 										viewBox="0 0 17 17"
 										fill="none"
-										class="scale-75"
+										class="scale-75 absolute bottom-[7px] -right-7"
 										xmlns="http://www.w3.org/2000/svg"
 									>
 										<path
@@ -291,7 +421,7 @@
 						</div>
 					</div>
 				{:else}
-					<div class="bg-bg h-[160px] flex gap-2 rounded-b-2xl">
+					<div class="bg-bg h-[180px] flex gap-2 rounded-b-2xl">
 						<div class="w-[40px] pt-5 px-5 shrink-0">
 							<button
 								on:click={() => {
@@ -302,11 +432,7 @@
 							>
 						</div>
 						<div class="w-[200px] pt-5 shrink-0">
-							<div class="mb-2">
-								Other investors
-
-								<span class="text-textLight text-sm ml-1"> (7%) </span>
-							</div>
+							<div class="mb-2">Other investors</div>
 							<div class="text-xs leading-5 text-textLight">
 								Who else is investing in this round? (through their pro-rata right)
 							</div>

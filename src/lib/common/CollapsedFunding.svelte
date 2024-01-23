@@ -34,6 +34,15 @@
 
 	const deleteEvent = () => {
 		$events = $events.filter((_, i) => i !== index);
+		$events = $events.map((e) => {
+			if (e.type !== 'priced') return e;
+			let participations = [...e.participations];
+			participations = participations.filter((p) => p !== data.name);
+			return {
+				...e,
+				participations
+			};
+		});
 	};
 
 	$: includingSafes =
@@ -53,10 +62,17 @@
 		if (data.type === 'priced') {
 			includingSafes && included.push('Safes');
 			data.options && included.push('options');
-			data.participations.length > 0 &&
-				(data.participations.length === 1
-					? included.push(data.participations[0] + ' pro-rata')
-					: included.push(data.participations.length + ' prev. investors'));
+
+			const proRatas = data.participations.filter((i) =>
+				($events.filter((e) => e.type !== 'options' && e.proRata) as (PricedRound | Safe)[])
+					.map((e) => e.name)
+					.includes(i)
+			);
+
+			proRatas.length > 0 &&
+				(proRatas.length === 1
+					? included.push(proRatas[0] + ' pro-rata')
+					: included.push(proRatas.length + ' prev. investors'));
 		}
 		if (included.length === 1) {
 			return `(including ${included[0]})`;

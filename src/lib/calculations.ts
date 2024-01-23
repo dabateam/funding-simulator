@@ -32,9 +32,9 @@ const getNewOptions = ({
 };
 
 export const getTableTotalShares = (table: CapTable) => {
-	return Object.values(table).reduce((prev, curr) => {
+	return table ? Object.values(table).reduce((prev, curr) => {
 		return prev + curr;
-	}, 0);
+	}, 0) : 0;
 };
 
 const getFirstTable = (): CapTable => {
@@ -48,7 +48,7 @@ const getFirstTable = (): CapTable => {
 	return table;
 };
 
-const getSafes = (firstPricedRound: PricedRound, totalShares: number) => {
+export const getSafes = (firstPricedRound: PricedRound, totalShares: number) => {
 	const safesTables: CapTable = {};
 
 	const safes = (get(_events).filter((e) => e.type === 'safe') as Safe[]).map((safe) => {
@@ -89,25 +89,28 @@ const getSafes = (firstPricedRound: PricedRound, totalShares: number) => {
 	return safesTables;
 };
 
-const getProRatas = ({
+export const getProRatas = ({
 	current,
 	event,
 	newShares,
 	total,
-	firstPricedRound
+	firstPricedRound,
+	allEvents
 }: {
 	event: PricedRound;
 	newShares: number;
 	total: number;
 	current: CapTable;
 	firstPricedRound: boolean;
+	allEvents: Event[]
 }) => {
 	let proRatas: CapTable = {};
-	const events = get(_events);
-	events.forEach((e) => {
+	allEvents.forEach((e) => {
+
 		if (e.type !== 'priced' && e.type !== 'safe') return;
 		if (e.type === 'safe' && !firstPricedRound) return;
 		if (!e.proRata || !current[e.name] || e.name === event.name) return;
+
 		const shares = newShares * (current[e.name] / total);
 		if (shares && event.participations.includes(e.name))
 			proRatas = addTables(proRatas, {
@@ -143,7 +146,7 @@ const getOptions = ({
 	return options;
 };
 
-const addTables = (oldTable: CapTable, table: CapTable) => {
+export const addTables = (oldTable: CapTable, table: CapTable) => {
 	return produce(oldTable, (draft) => {
 		Object.keys(table).forEach((key) => {
 			draft[key] = (draft[key] || 0) + table[key];
@@ -188,8 +191,10 @@ export const getNewTable = (event: Event, previousTable: CapTable, firstPricedRo
 			event,
 			newShares: newInvestorsShares,
 			current: addTables(previousTable, newTable),
-			total: getCurrentTotal()
+			total: getCurrentTotal(),
+			allEvents: get(_events)
 		});
+
 		const proRatasTotal = getTableTotalShares(proRatas);
 
 		const mainInvestorShares = newInvestorsShares - proRatasTotal;
@@ -244,7 +249,7 @@ export const getCapTables = (): CapTable[] => {
 				if (key === AVAILABLE_OPTIONS_LABEL) {
 					distributedOptions[AVAILABLE_OPTIONS_LABEL] = -availableOptions;
 				} else {
-					const newShares = (lastTable[key] / total) * availableOptions;
+					const newShares = (lastTable?.[key] / total) * availableOptions;
 					distributedOptions[key] = newShares;
 				}
 			});

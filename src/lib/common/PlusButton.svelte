@@ -6,6 +6,8 @@
 	import SafeIcon from '$lib/icons/SafeIcon.svelte';
 	import { events, exit } from '$lib/store';
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import type { PricedRound, Safe } from '$lib/types';
 
 	let ref: HTMLDivElement;
 
@@ -38,10 +40,26 @@
 		];
 	};
 
+	$: getParticipations = () => {
+		const previousPricedRounds = $events
+			.slice(0, position)
+			.filter((e) => e.type === 'priced') as PricedRound[];
+		if (previousPricedRounds.length > 0) {
+			const previousPricedRound = previousPricedRounds[previousPricedRounds.length - 1];
+			if (previousPricedRound.proRata) {
+				return [previousPricedRound.name];
+			}
+		} else {
+			return ($events.slice(0, position).filter((e) => e.type === 'safe') as Safe[]).map(
+				(e) => e.name
+			);
+		}
+		return [];
+	};
+
 	const addPriced = () => {
 		showMenu = false;
 		const name = generateNameForEvent('priced', position);
-
 		$events = [
 			...$events.slice(0, position),
 			{
@@ -51,7 +69,7 @@
 				proRata: true,
 				valuation: getDefaultPricedRoundAmount(name)[1] * 1_000_000,
 				options: 10,
-				participations: []
+				participations: getParticipations()
 			},
 			...$events.slice(position)
 		];

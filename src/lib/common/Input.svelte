@@ -59,11 +59,18 @@
 	});
 
 	export let onchange = (value: string) => {};
-	export let onkeypress = (e: KeyboardEvent) => {};
+	export let onkeypress = (
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLInputElement;
+		},
+		val: string
+	) => {};
 	export let white: boolean = false;
 	export let preventEmpty: boolean = false;
 	export { _class as class };
 	export let faded: boolean = false;
+
+	let preventMouseUp = true;
 </script>
 
 <div class={cn('relative', _class)}>
@@ -71,6 +78,7 @@
 		{value}
 		bind:this={inputRef}
 		on:focus={() => {
+			preventMouseUp = true;
 			selectOnFocus && setTimeout(() => inputRef.select(), 50);
 		}}
 		class={cn(
@@ -88,9 +96,10 @@
 			}
 		}}
 		on:mouseup={(e) => {
-			e.preventDefault();
+			preventMouseUp && e.preventDefault();
+			preventMouseUp = false;
 		}}
-		on:keypress={onkeypress}
+		on:keypress={(e) => onkeypress(e, mask.unmaskedValue)}
 	/>
 	<div
 		class={cn(

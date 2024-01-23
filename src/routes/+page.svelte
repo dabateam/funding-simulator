@@ -99,7 +99,7 @@
 		{/if}
 	</button>
 	<a
-		href="https://www.github.com"
+		href="https://github.com/dabateam/funding-simulator"
 		target="__blank"
 		class=" w-10 h-10 flex items-center justify-center rounded-xl hover:bg-borderLight active:bg-borderDark"
 	>
