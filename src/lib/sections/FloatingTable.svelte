@@ -65,10 +65,11 @@
 					class={cn(
 						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
 						line.diff > 0 && 'text-green-600',
-						line.diff === 0 && 'text-textLight text-center'
+						(line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0') &&
+							'text-textLight text-center'
 					)}
 				>
-					{#if line.diff === 0 || line.diff === -0}
+					{#if line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0'}
 						—
 					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
@@ -100,10 +101,11 @@
 					class={cn(
 						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
 						line.diff > 0 && 'text-green-600',
-						line.diff === 0 && 'text-textLight text-center'
+						(line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0') &&
+							'text-textLight text-center'
 					)}
 				>
-					{#if line.diff === 0 || line.diff === -0}
+					{#if line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0'}
 						—
 					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
@@ -135,10 +137,11 @@
 					class={cn(
 						'w-[45px] text-right text-red-600 opacity-40 group-hover/line:opacity-100',
 						line.diff > 0 && 'text-green-600',
-						line.diff === 0 && 'text-textLight text-center'
+						(line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0') &&
+							'text-textLight text-center'
 					)}
 				>
-					{#if line.diff === 0 || line.diff === -0}
+					{#if line.diff.toFixed(1) === '0.0' || line.diff.toFixed(1) === '-0.0'}
 						—
 					{:else}
 						{line.diff > 0 ? '+' : ''}{line.diff.toFixed(1)}%
