@@ -109,7 +109,7 @@ const getProRatas = ({
 		if (e.type === 'safe' && !firstPricedRound) return;
 		if (!e.proRata || !current[e.name] || e.name === event.name) return;
 		const shares = newShares * (current[e.name] / total);
-		if (shares)
+		if (shares && event.participations.includes(e.name))
 			proRatas = addTables(proRatas, {
 				[e.name]: shares
 			});
