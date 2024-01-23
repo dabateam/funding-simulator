@@ -38,6 +38,15 @@ export const resetData = () => {
 	exit.set(null);
 };
 
+// export const getProRatasEvents = () => {
+// 	const _events = get(events)
+// 	const proRatas: { [key: string]: string[] } = {}
+// 	_events.forEach(e => {
+// 		if(e.type !== 'priced') return;
+// 		proRatas[e.name] 
+// 	})
+// }
+
 export const generateId = () => {
 	const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-';
 	const id = new Array(7)
@@ -90,14 +99,15 @@ const getEventsFromString = (eventsString: string): Event[] => {
 				amount: parseInt(es.split(',')[2]),
 				valuation: parseInt(es.split(',')[3]),
 				options: parseFloat(es.split(',')[4]),
-				proRata: es.split(',')[5] === '1'
+				proRata: es.split(',')[5] === '1',
+				participations: (es.split(',')[6]?.split("+") ?? []).filter(e => !!e),
 			};
 			return event;
 		}
 		const event: Options = {
 			amount: parseFloat(es.split(',')[1]),
 			type: 'options',
-			reserve: es.split(',')[2] === '1'
+			reserved: parseFloat(es.split(',')[2])
 		};
 		return event;
 	});
@@ -120,10 +130,10 @@ const getEventsString = (events: Event[]): string => {
 				}`;
 			}
 			if (e.type === 'priced') {
-				return `p,${e.name},${e.amount},${e.valuation},${e.options},${e.proRata ? '1' : '0'}`;
+				return `p,${e.name},${e.amount},${e.valuation},${e.options || 0},${e.proRata ? '1' : '0'},${e.participations.join("+")}`;
 			}
 			if (e.type === 'options') {
-				return `o,${e.amount},${e.reserve ? '1' : '0'}`;
+				return `o,${e.amount},${e.reserved}`;
 			}
 		})
 		.join('_');
@@ -149,7 +159,7 @@ export const getDataFromString = (string: string) => {
 	const id = string.split(';')[0] || '';
 	const name = string.split(';')[1] || '';
 	const founders = string.split(';')[2] ? getFoundersFromString(string.split(';')[2]) : [];
-	const events = string.split(';')[3] ? getEventsFromString(string.split(';')[3]) : [];
+	const events = string.split(';')[3] ? getEventsFromString(string.split(';')[3]) : []; 
 	const exit = string.split(';')[4] ? getExitFromString(string.split(';')[4]) : null;
 
 	return { id, name, founders, events, exit };
@@ -226,3 +236,4 @@ companyName.subscribe(refresh);
 founders.subscribe(refresh);
 events.subscribe(refresh);
 exit.subscribe(refresh);
+

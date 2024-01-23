@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { launchConfetti } from '$lib';
 	import Button from '$lib/common/Button.svelte';
 	import Input from '$lib/common/Input.svelte';
 	import { events, exit } from '$lib/store';
@@ -34,6 +35,7 @@
 		<Button
 			onclick={() => {
 				$exit && ($exit.amount = amount);
+				launchConfetti();
 			}}
 			class="mt-7 bg-primaryOrange text-white border-none rounded-lg py-2 px-3 primary-button"
 			>Sell it!</Button

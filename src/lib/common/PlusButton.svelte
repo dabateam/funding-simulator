@@ -50,20 +50,21 @@
 				name,
 				proRata: true,
 				valuation: getDefaultPricedRoundAmount(name)[1] * 1_000_000,
-				options: 10
+				options: 10,
+				participations: []
 			},
 			...$events.slice(position)
 		];
 	};
 
-	const addOptions = (reserve: boolean) => {
+	const addOptions = () => {
 		showMenu = false;
 		$events = [
 			...$events.slice(0, position),
 			{
 				type: 'options',
-				amount: 7,
-				reserve
+				amount: 2,
+				reserved: 10
 			},
 			...$events.slice(position)
 		];
@@ -73,7 +74,8 @@
 
 	export let position: number;
 
-	$: showExit = $events.slice(0, position).some((e) => e.type === 'priced');
+	$: showExit =
+		$events.slice(0, position).some((e) => e.type === 'priced') && position === $events.length;
 	$: showSafe = !$events.slice(0, position).some((e) => e.type === 'priced');
 	$: showPriced = !$events.slice(position).some((e) => e.type === 'safe');
 </script>
@@ -119,42 +121,40 @@
 					on:click={addSafe}
 					class={cn(
 						'border-b border-borderLight last:border-none flex items-center h-[44px] px-4 cursor-pointer min-w-[150px] hover:bg-bg active:bg-borderLight whitespace-nowrap',
-						!showSafe && 'opacity-30 pointer-events-none'
+						!showSafe && 'pointer-events-none'
 					)}
 				>
-					<div class="w-3 mr-3 text-primaryOrange"><SafeIcon /></div>
-					Safe<span class="text-textLight ml-1">(Post-money)</span>
+					<div class={cn('w-3 mr-3 text-primaryOrange', !showSafe && 'opacity-30')}>
+						<SafeIcon />
+					</div>
+					<span class={cn(!showSafe && 'opacity-30')}
+						>Safe<span class="text-textLight ml-1">(Post-money)</span></span
+					>
 				</div>
 				<div
 					on:click={addPriced}
 					class={cn(
 						'border-b border-borderLight last:border-none flex items-center h-[44px] px-4 cursor-pointer min-w-[150px] hover:bg-bg active:bg-borderLight whitespace-nowrap',
-						!showPriced && 'opacity-30 pointer-events-none'
+						!showPriced && 'pointer-events-none'
 					)}
 				>
-					<div class="w-3 mr-3 text-primaryOrange"><PricedIcon /></div>
+					<div class={cn('w-3 mr-3 text-primaryOrange', !showPriced && 'opacity-30')}>
+						<PricedIcon />
+					</div>
 
-					Priced round<span class="text-textLight ml-1">/ Equity financing</span>
+					<span class={cn(!showPriced && 'opacity-30')}
+						>Priced round<span class="text-textLight ml-1">/ Equity financing</span></span
+					>
 				</div>
 				<div
-					on:click={() => addOptions(true)}
+					on:click={() => addOptions()}
 					class={cn(
 						'border-b border-borderLight last:border-none flex items-center h-[44px] px-4 cursor-pointer min-w-[150px] hover:bg-bg active:bg-borderLight whitespace-nowrap'
 					)}
 				>
-					<div class="w-3 mr-3 text-primaryOrange"><OptionsIcon /></div>
+					<div class={cn('w-3 mr-3 text-primaryOrange')}><OptionsIcon /></div>
 
-					Reserve options<span class="text-textLight ml-1">for employees</span>
-				</div>
-				<div
-					on:click={() => addOptions(false)}
-					class={cn(
-						'border-b border-borderLight last:border-none flex items-center h-[44px] px-4 cursor-pointer min-w-[150px] hover:bg-bg active:bg-borderLight whitespace-nowrap'
-					)}
-				>
-					<div class="w-3 mr-3 text-primaryOrange"><OptionsIcon /></div>
-
-					Give options<span class="text-textLight ml-1">to employees</span>
+					<span>Reserve/give options<span class="text-textLight ml-1">to employees</span></span>
 				</div>
 
 				<div
@@ -167,11 +167,15 @@
 					}}
 					class={cn(
 						'border-b border-borderLight last:border-none flex items-center h-[44px] px-4 cursor-pointer min-w-[150px] hover:bg-bg active:bg-borderLight whitespace-nowrap',
-						!showExit && 'opacity-30 pointer-events-none'
+						!showExit && 'pointer-events-none'
 					)}
 				>
-					<div class="w-3 mr-3 text-primaryOrange"><ExitIcon /></div>
-					Exit<span class="text-textLight ml-1">/ Sell the startup</span>
+					<div class={cn('w-3 mr-3 text-primaryOrange', !showExit && 'opacity-30')}>
+						<ExitIcon />
+					</div>
+					<span class={cn(!showExit && 'opacity-30')}
+						>Exit<span class="text-textLight ml-1">/ Sell the startup</span></span
+					>
 				</div>
 			</div>
 		</div>

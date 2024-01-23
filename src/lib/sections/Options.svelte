@@ -44,7 +44,7 @@
 			id="options-box"
 			out:box
 			in:box={{ delay: 50 }}
-			class="w-[500px] bg-bg transition-none duration-0 origin-center flex flex-col items-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-10 funding-box border border-white rounded-2xl"
+			class="w-[500px] bg-bg transition-none duration-0 origin-center flex flex-col items-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] funding-box border border-white rounded-2xl"
 		>
 			<div
 				class="absolute right-[0] top-[calc(50%_+_11px)] -translate-y-[50%] translate-x-[calc(100%_+_20px)]"
@@ -56,24 +56,44 @@
 				<span class="text-primaryOrange">15% </span>
 				of all shares
 			</div>
-			<div
-				class="flex flex-col items-center py-6 border-y-[3px] border-borderLight w-full bg-white"
-			>
-				<div class="mb-1">
-					{data.reserve
-						? 'Reserve options to give to employees in the future'
-						: 'Give options to employees'}
+			<div class="flex w-full">
+				<div
+					class={cn(
+						'flex-1 flex flex-col items-center py-6 border-y-[3px] border-borderLight w-full bg-white border-r-[3px]',
+						!data.reserved && 'opacity-50'
+					)}
+				>
+					<div class="mb-1">Reserve options</div>
+					<div class="text-textLight text-sm">Increase available pool</div>
+					<Input
+						autofocus
+						selectOnFocus
+						class="mt-5 mb-1"
+						type="percent"
+						value={data.reserved}
+						onchange={(value) => {
+							data.reserved = parseFloat(value);
+						}}
+					/>
 				</div>
-				<Input
-					autofocus
-					selectOnFocus
-					class="mt-5 mb-1"
-					type="percent"
-					value={data.amount}
-					onchange={(value) => {
-						data.amount = parseFloat(value);
-					}}
-				/>
+				<div
+					class={cn(
+						'flex-1 flex flex-col items-center py-6 border-y-[3px] border-borderLight w-full bg-white',
+						!data.amount && 'opacity-50'
+					)}
+				>
+					<div class="mb-1">Grant options</div>
+					<div class="text-textLight text-sm">Give to employees</div>
+					<Input
+						selectOnFocus
+						class="mt-5 mb-1"
+						type="percent"
+						value={data.amount}
+						onchange={(value) => {
+							data.amount = parseFloat(value);
+						}}
+					/>
+				</div>
 			</div>
 			<div class="text-sm h-12 text-textLight flex items-center justify-center gap-1.5">
 				Option pool remaining before next round is
@@ -86,18 +106,20 @@
 			transition:box_reverse
 			class="bg-bg text-sm cursor-pointer hover:border-borderDarkHover active:border-borderDark border-2 border-borderDark flex items-center gap-3 py-2 px-3 rounded-xl mx-auto w-fit"
 		>
-			{#if data.reserve}
-				<div>
+			<div>
+				<span class="mr-2 text-textLight">Options</span>
+				{#if data.reserved}
 					Reserve
-					<span class="text-primaryOrange">{data.amount}%</span>
-					as available options
-				</div>
-			{:else}
-				<div>
+					<span class="text-primaryOrange">{data.reserved}%</span>
+				{/if}
+				{#if data.reserved && data.amount}
+					,
+				{/if}
+				{#if data.amount}
 					Give
 					<span class="text-primaryOrange">{data.amount}%</span> to employees
-				</div>
-			{/if}
+				{/if}
+			</div>
 		</div>
 		<button
 			class="right-[0px] text-textLight top-[0px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute"

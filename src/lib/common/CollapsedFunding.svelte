@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { box_reverse, cn, formatAmount } from '$lib';
-	import { events } from '$lib/store';
+	import { events, tables } from '$lib/store';
 
 	import type { PricedRound, Safe } from '$lib/types';
 
 	import DeleteIcon from '$lib/icons/DeleteIcon.svelte';
+	import { getTableTotalShares } from '$lib/calculations';
 
 	export let data: PricedRound | Safe;
 	export let index: number;
@@ -33,6 +34,35 @@
 
 	const deleteEvent = () => {
 		$events = $events.filter((_, i) => i !== index);
+	};
+
+	$: includingSafes =
+		(($events.filter((e) => e.type === 'priced') as PricedRound[])[0] || null)?.name ===
+			data.name && $events.filter((e) => e.type === 'safe').length > 0;
+
+	$: getDilutedBy = () => {
+		const totalDilution =
+			((getTableTotalShares($tables[index + 1]) - getTableTotalShares($tables[index])) /
+				getTableTotalShares($tables[index + 1])) *
+			100;
+		return totalDilution.toFixed(0);
+	};
+
+	$: getIncludingMessage = (): string => {
+		let included: string[] = [];
+		if (data.type === 'priced') {
+			includingSafes && included.push('Safes');
+			data.options && included.push('options');
+			data.participations.length > 0 && included.push('previous investors');
+		}
+		if (included.length === 1) {
+			return `(including ${included[0]})`;
+		} else if (included.length === 2) {
+			return `(including ${included[0]} & ${included[1]})`;
+		} else if (included.length === 3) {
+			return `(including ${included[0]}, ${included[1]} & ${included[2]})`;
+		}
+		return '';
 	};
 </script>
 
@@ -87,8 +117,10 @@
 			<div class="">{getOtherString(data)}</div>
 		</div>
 	</div>
-	<div class=" bg-bg text-xs p-3 text-center w-fit mx-auto">
-		Diluted by <span class="text-primaryOrange">30%</span>
+	<div class="text-xs p-3 text-center w-fit mx-auto text-textLight bg-bg">
+		{#if data.type !== 'safe'}
+			Diluted by {getDilutedBy()}% {getIncludingMessage()}
+		{/if}
 	</div>
 	<button
 		class="right-[0] text-textLight top-[40px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute"

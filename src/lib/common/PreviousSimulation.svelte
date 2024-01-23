@@ -25,7 +25,7 @@
 
 <div
 	on:click={onclick}
-	class="h-[68px] mb-3 py-3 px-4 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
+	class="mb-3 py-2 px-3 rounded-lg border-2 border-borderDark active:translate-y-[1px] text-xs cursor-pointer hover:border-borderDarkHover"
 >
 	<div class="">
 		{#if name}
@@ -55,7 +55,7 @@
 		? () => {
 				ondelete();
 				showConfirm = false;
-		  }
+			}
 		: () => (showConfirm = true)}
 >
 	{#if showConfirm}

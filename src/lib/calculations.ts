@@ -4,8 +4,8 @@ import { produce } from 'immer';
 import type { CapTable, Event, Options, PricedRound, Safe } from './types';
 
 const INITIAL_SHARES = 10_000_000;
-const AVAILABLE_OPTIONS_LABEL = 'Available options';
-const EMPLOYEE_OPTIONS_LABEL = 'Employees';
+export const AVAILABLE_OPTIONS_LABEL = 'Available';
+export const EMPLOYEE_OPTIONS_LABEL = 'Employees';
 
 const getNewOptions = ({
 	currentShares,
@@ -127,10 +127,12 @@ const getOptions = ({
 	total: number;
 }) => {
 	const options: CapTable = {};
-	const target = event.amount / 100;
-	if (event.reserve) {
+	if (event.reserved) {
+	const target = event.reserved / 100;
 		options[AVAILABLE_OPTIONS_LABEL] = (target * total) / (1 - target);
-	} else {
+	}
+	if(event.amount) {
+		const target = event.amount / 100;
 		if (target <= parseFloat(((current[AVAILABLE_OPTIONS_LABEL] || 0) / total).toFixed(2))) {
 			const sharesToGrant = total * target;
 			options[EMPLOYEE_OPTIONS_LABEL] = (options[EMPLOYEE_OPTIONS_LABEL] || 0) + sharesToGrant;

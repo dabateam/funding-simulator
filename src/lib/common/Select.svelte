@@ -5,10 +5,14 @@
 	export let label = '';
 	let _class: string = '';
 	export { _class as class };
+	export let onclick = () => {};
 </script>
 
 <div
-	on:click={() => (checked = !checked)}
+	on:click={() => {
+		checked = !checked;
+		onclick();
+	}}
 	class={cn(
 		'group/select flex gap-2 items-center justify-center w-fit p-2 px-3 rounded-lg cursor-pointer select-none active:bg-borderLight     hover:bg-bg',
 		_class

@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { formatAmount } from '$lib';
+	import { cn, formatAmount } from '$lib';
 	import Input from '$lib/common/Input.svelte';
-	import { exit, finalYouShares } from '$lib/store';
+	import { exit, finalYouShares, tables } from '$lib/store';
+	import FloatingTable from './FloatingTable.svelte';
 </script>
 
-<div class="flex flex-col items-center group bg-bg">
+<div class="relative flex flex-col items-center group bg-bg">
+	<div class={cn('absolute -right-[20px] top-[50%] -translate-y-[50%] translate-x-[100%]')}>
+		<FloatingTable position={$tables.length - 2} />
+	</div>
 	<div class="pt-10 pb-0 rounded-3xl border-[4px] border-borderLight overflow-hidden">
 		<div class="px-16 flex flex-col items-center">
-			<div class="text-2xl text-primaryOrange relative">Congratulations!</div>
+			<div class="text-2xl text-textLight relative">Congratulations!</div>
 			<div class="mt-8 mb-2 text-sm">You just sold your startup for</div>
 			<Input
 				value={$exit?.amount}
@@ -17,28 +21,19 @@
 				width="220"
 				white
 			/>
-			<div class=" my-10 border-2 border-borderDark p-3 px-5 rounded-xl">
-				You kept <span class="text-primaryOrange">{parseFloat($finalYouShares.toFixed(1))}%</span> equity
-				in your company after the sale.
+			<div class=" mt-10">
+				You kept <span
+					class="inline-block rounded-lg p-1 px-1.5 mx-1 border-[2px] border-borderDark [box-shadow:0px_1px_theme(colors.borderDark)]"
+					>{parseFloat($finalYouShares.toFixed(1))}%</span
+				> equity in your company after the sale.
 			</div>
-			<div class="text-sm">Long term capital gains tax</div>
-			<Input
-				value={$exit?.tax}
-				onchange={(val) => {
-					$exit && ($exit.tax = parseFloat(val));
-				}}
-				class="my-3"
-				width="100"
-				type="percent"
-				white
-			/>
-			<div class="text-xs text-textLight">Additional taxes might apply.</div>
 		</div>
 		<div class=" text-center border-t-[3px] border-borderLight text-2xl mt-10 bg-white p-6 flex-1">
-			<div class="text-sm mb-2 text-textLight">After all investors get paid ...</div>
-			You go home with&nbsp;<span class="text-primaryOrange"
+			<div class="text-sm mb-2 text-textLight">After all investors get paid,</div>
+			You get&nbsp;<span class="text-primaryOrange"
 				>{formatAmount((($exit?.amount || 0) * $finalYouShares) / 100)}</span
 			>
+			<div class="text-sm mt-2 text-textLight">before taxes.</div>
 		</div>
 	</div>
 	<button

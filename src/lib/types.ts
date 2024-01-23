@@ -29,12 +29,13 @@ export type PricedRound = {
 	options: number;
 	amount: number;
 	name: string;
+	participations: string[]
 };
 
 export type Options = {
 	type: 'options';
 	amount: number;
-	reserve?: boolean;
+	reserved: number;
 };
 
 // types
