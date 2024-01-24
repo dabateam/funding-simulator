@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { box } from '$lib';
+
 	import Button from '$lib/common/Button.svelte';
 	import {
 		generateId,
@@ -66,7 +67,7 @@
 
 							const url = new URL(window.location.href);
 							url.searchParams.set('data', previousSims[simIndex]);
-							window.history.pushState({}, '', url);
+							window.history.replaceState({}, '', url);
 						}}
 					/>
 				</div>

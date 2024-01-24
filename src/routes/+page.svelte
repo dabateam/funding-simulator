@@ -17,6 +17,8 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import DabaLogo from '$lib/icons/DabaLogo.svelte';
+	import tippy from 'svelte-tippy';
+
 	let theme: 'light' | 'dark' = 'light';
 
 	onMount(() => {
@@ -50,6 +52,7 @@
 			out:box_reverse={{ duration: 300, scale: 25 }}
 		>
 			<Founders />
+
 			<Dash position={0} noButton={$events.length === 0} />
 			{#each $events as event, eId}
 				{#if event.type === 'safe' || event.type === 'priced'}

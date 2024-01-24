@@ -43,7 +43,7 @@ export const resetData = () => {
 // 	const proRatas: { [key: string]: string[] } = {}
 // 	_events.forEach(e => {
 // 		if(e.type !== 'priced') return;
-// 		proRatas[e.name] 
+// 		proRatas[e.name]
 // 	})
 // }
 
@@ -100,7 +100,7 @@ const getEventsFromString = (eventsString: string): Event[] => {
 				valuation: parseInt(es.split(',')[3]),
 				options: parseFloat(es.split(',')[4]),
 				proRata: es.split(',')[5] === '1',
-				participations: (es.split(',')[6]?.split("+") ?? []).filter(e => !!e),
+				participations: (es.split(',')[6]?.split('+') ?? []).filter((e) => !!e)
 			};
 			return event;
 		}
@@ -130,7 +130,7 @@ const getEventsString = (events: Event[]): string => {
 				}`;
 			}
 			if (e.type === 'priced') {
-				return `p,${e.name},${e.amount},${e.valuation},${e.options || 0},${e.proRata ? '1' : '0'},${e.participations.join("+")}`;
+				return `p,${e.name},${e.amount},${e.valuation},${e.options || 0},${e.proRata ? '1' : '0'},${e.participations.join('+')}`;
 			}
 			if (e.type === 'options') {
 				return `o,${e.amount},${e.reserved}`;
@@ -159,7 +159,7 @@ export const getDataFromString = (string: string) => {
 	const id = string.split(';')[0] || '';
 	const name = string.split(';')[1] || '';
 	const founders = string.split(';')[2] ? getFoundersFromString(string.split(';')[2]) : [];
-	const events = string.split(';')[3] ? getEventsFromString(string.split(';')[3]) : []; 
+	const events = string.split(';')[3] ? getEventsFromString(string.split(';')[3]) : [];
 	const exit = string.split(';')[4] ? getExitFromString(string.split(';')[4]) : null;
 
 	return { id, name, founders, events, exit };
@@ -209,7 +209,7 @@ const refresh = () => {
 		const urlString = toURL();
 		const url = new URL(window.location.href);
 		url.searchParams.set('data', urlString);
-		window.history.pushState({}, '', url);
+		window.history.replaceState({}, '', url);
 		const simulationsString = getOrSetPreviousSims();
 		const indexOfCurrentSim = simulationsString.findIndex((el) => el.split(';')[0] === get(simId));
 		if (indexOfCurrentSim !== -1) {
@@ -236,4 +236,3 @@ companyName.subscribe(refresh);
 founders.subscribe(refresh);
 events.subscribe(refresh);
 exit.subscribe(refresh);
-

@@ -15,6 +15,7 @@
 		getSafes,
 		getTableTotalShares
 	} from '$lib/calculations';
+	import tippy from 'svelte-tippy';
 
 	export let data: PricedRound | Safe;
 	export let index: number;
@@ -262,7 +263,16 @@
 							/>
 						</div>
 						<div>
-							<div class="text-center mb-3">Options</div>
+							<div
+								class="text-center mb-3"
+								use:tippy={{
+									content:
+										'Investors usually expect you to have available options after the round.',
+									arrow: false
+								}}
+							>
+								Options
+							</div>
 							<Input
 								width="90"
 								type="percent"
