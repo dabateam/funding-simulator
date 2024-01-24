@@ -114,23 +114,33 @@
 
 <div
 	transition:box_reverse
-	class=" transition-none duration-0 flex flex-col align-center justify-center group px-11 max-md:px-0"
+	class="transition-none duration-0 flex flex-col align-center justify-center group px-11 max-sm:px-0"
 >
-	<div class={cn('text-center text-xs text-textLight my-2', sameNameError && 'text-red-500')}>
-		{sameNameError
-			? 'Error: Duplicate name'
-			: data.type === 'priced'
-				? 'Priced round'
-				: 'Safe - ' + getSafeLabel()}
+	<div class="max-sm:flex max-sm:justify-between max-sm:items-center max-sm:mb-1 max-sm:-mt-8">
+		<div class="pl-2 max-sm:block hidden">
+			{data.name}
+		</div>
+		<div
+			class={cn(
+				'max-sm:pr-2 text-center text-xs text-textLight my-2',
+				sameNameError && 'text-red-500'
+			)}
+		>
+			{sameNameError
+				? 'Error: Duplicate name'
+				: data.type === 'priced'
+					? 'Priced round'
+					: 'Safe - ' + getSafeLabel()}
+		</div>
 	</div>
 	<div
 		on:click
 		class={cn(
-			'cursor-pointer hover:border-borderDark active:border-borderDarkHover p-[10px] pr-5 text-sm flex gap-5 border-2 rounded-xl border-borderLight bg-white leading-[1.2]',
+			'cursor-pointer hover:border-borderDark active:border-borderDarkHover p-[10px] pr-5 text-sm flex gap-5 border-2 rounded-xl border-borderLight bg-white leading-[1.2] max-sm:w-[340px] max-sm:justify-between max-sm:p-5 max-sm:py-3',
 			sameNameError && 'border-red-200 hover:border-red-300 active:border-red-300'
 		)}
 	>
-		<div class={cn('px-3 py-2 rounded-lg bg-bg')}>
+		<div class={cn('px-3 py-2 rounded-lg bg-bg max-sm:hidden')}>
 			{data.name}
 		</div>
 		<div class="flex flex-col justify-between">
@@ -169,7 +179,7 @@
 	</div>
 	<div class="text-xs p-3 text-center w-fit mx-auto text-textLight bg-bg">
 		{#if data.type !== 'safe'}
-			Diluted by {getDilutedBy()}% {getIncludingMessage()}
+			Diluted by {getDilutedBy()}% <span class="max-sm:hidden">{getIncludingMessage()}</span>
 		{:else if effectiveValuation}
 			Effective valuation: {formatAmount(effectiveValuation)}
 		{/if}

@@ -6,7 +6,6 @@
 	import SafeIcon from '$lib/icons/SafeIcon.svelte';
 	import { events, exit } from '$lib/store';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import type { PricedRound, Safe } from '$lib/types';
 
 	let ref: HTMLDivElement;
@@ -128,7 +127,10 @@
 	</svg>
 
 	{#if showMenu}
-		<div transition:menu class="absolute -left-8 top-[50%] -translate-y-[50%] p-12 pl-24">
+		<div
+			transition:menu
+			class="absolute -left-8 top-[50%] -translate-y-[50%] p-12 pl-24 max-sm:p-0 max-sm:top-[50%] max-sm:-translate-x-[50%] max-sm:left-[50%]"
+		>
 			<!-- <div
 				class="w-3 h-3 bg-white absolute top-[50%] -translate-y-[50%] -translate-x-[50%] rotate-45 z-20 rounded-bl-[3px]"
 			/> -->

@@ -175,10 +175,10 @@
 		[];
 </script>
 
-<div class="group relative flex flex-col items-center h-[120px] __event">
+<div class="group relative flex flex-col items-center h-[120px] __event max-sm:h-fit">
 	<div
 		class={cn(
-			'max-md:hidden absolute -right-[10px] top-[calc(50%_+_1.5px)] -translate-y-[50%] translate-x-[100%] group-hover:block hidden',
+			'absolute -right-[10px] top-[calc(50%_+_1.5px)] -translate-y-[50%] translate-x-[100%] group-hover:block hidden max-sm:group-hover:hidden ',
 			show && 'hidden'
 		)}
 	>
@@ -192,7 +192,7 @@
 			class="transition-none duration-0 origin-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] border border-white rounded-2xl funding-box"
 		>
 			<div
-				class="absolute right-[0] top-[calc(50%_+_11px)] -translate-y-[50%] translate-x-[calc(100%_+_20px)]"
+				class="absolute right-[0] top-[calc(50%_+_11px)] -translate-y-[50%] translate-x-[calc(100%_+_20px)] max-sm:hidden"
 			>
 				<FloatingTable position={index} />
 			</div>
@@ -218,7 +218,7 @@
 			</div>
 
 			<div class=" bg-white border-y-[3px] border-borderLight p-8 pb-6 py-8">
-				<div class="flex gap-5">
+				<div class="flex gap-5 max-sm:flex-col max-sm:items-center">
 					{#if data.type === 'priced'}
 						<div>
 							<div class="text-center mb-3">Amount</div>
@@ -323,17 +323,19 @@
 						</div>
 					{/if}
 				</div>
-				<div class="flex justify-center">
+				<div class="flex justify-center max-sm:flex-col max-sm:items-center">
 					{#if data.type === 'safe'}
-						<Select bind:checked={data.mfn} class="mt-5" label="MFN provision" />
+						<Select bind:checked={data.mfn} class="mt-5 " label="MFN provision" />
 					{/if}
-					<Select bind:checked={data.proRata} class="mt-5" label="Pro-rata rights" />
+					<Select bind:checked={data.proRata} class="mt-5 max-sm:mt-2" label="Pro-rata rights" />
 				</div>
 			</div>
 
 			{#if data.type === 'priced'}
 				{#if !showProRata}
-					<div class="bg-bg flex items-center justify-center gap-4 py-5 h-[180px] rounded-b-2xl">
+					<div
+						class="bg-bg flex items-center justify-center gap-4 py-5 h-[180px] rounded-b-2xl max-sm:flex-col max-sm:items-center max-sm:h-fit"
+					>
 						<div>
 							Total equity sold: <span class="text-primaryOrange mr-2"
 								>{dilutions?.total.toFixed(1)}%</span
@@ -426,7 +428,7 @@
 						</div>
 					</div>
 				{:else}
-					<div class="bg-bg h-[180px] flex gap-2 rounded-b-2xl">
+					<div class="bg-bg h-[180px] flex gap-2 rounded-b-2xl max-sm:flex-col max-sm:h-fit">
 						<div class="w-[40px] pt-5 px-5 shrink-0">
 							<button
 								on:click={() => {

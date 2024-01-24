@@ -13,8 +13,16 @@
 	on:mouseenter={() => (showPlusButton = true)}
 	on:mouseleave={() => (showPlusButton = false)}
 >
-	<div class="w-[3px] bg-[url(/stripe.svg)]" style:height />
+	<div class="w-[3px] bg-[url(/stripe.svg)] max-sm:!h-[300px]" style:height />
 	{#if !noButton && showPlusButton}
-		<PlusButton {position} />
+		<div class="max-sm:hidden">
+			<PlusButton {position} />
+		</div>
+	{/if}
+
+	{#if !noButton}
+		<div class="hidden max-sm:block">
+			<PlusButton {position} />
+		</div>
 	{/if}
 </div>
