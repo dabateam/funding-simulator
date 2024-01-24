@@ -42,7 +42,7 @@
 	<div class="pt-10 mb-20">
 		<!-- svelte-ignore a11y-autofocus -->
 		<input
-			autofocus
+			autofocus={window.innerWidth >= 640}
 			value={$companyName}
 			on:blur={(e) => {
 				$companyName = e.currentTarget.value;

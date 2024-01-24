@@ -53,8 +53,7 @@
 	onMount(() => {
 		if (inputRef) {
 			mask = IMask(inputRef, currentMask);
-			autofocus && inputRef.focus();
-			// autoselect && setTimeout(() => inputRef.select(), 50);
+			autofocus && window.innerWidth > 640 && inputRef.focus();
 		}
 	});
 
