@@ -36,7 +36,7 @@
 			goto('/', { replaceState: true });
 			$loadedData = false;
 		}}
-		class="__invertable fixed top-[30px] left-[30px] text-textLight text-xl w-10 h-10 rounded-xl hover:bg-borderLight active:bg-borderDark z-[3]"
+		class="__invertable max-sm:hidden fixed top-[30px] left-[30px] text-textLight text-xl w-10 h-10 rounded-xl hover:bg-borderLight active:bg-borderDark z-[3]"
 	>
 		{'<-'}
 	</button>
@@ -80,7 +80,7 @@
 </div>
 
 <div
-	class="__invertable fixed bottom-[30px] left-[30px] text-textLight z-[3] flex flex-col gap-1 items-center"
+	class="__invertable fixed bottom-[30px] left-[30px] text-textLight z-[3] flex flex-col gap-1 items-center max-sm:flex-row max-sm:left-[50%] max-sm:-translate-x-[50%] max-sm:absolute max-sm:gap-3"
 >
 	<button
 		transition:fade

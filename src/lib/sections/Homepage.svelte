@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { box, box_reverse, formatAmount } from '$lib';
+	import { box } from '$lib';
 	import Button from '$lib/common/Button.svelte';
-	import DeleteIcon from '$lib/icons/DeleteIcon.svelte';
 	import {
 		generateId,
 		getDataFromString,

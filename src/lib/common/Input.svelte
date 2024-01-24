@@ -40,8 +40,6 @@
 	let mask: InputMask;
 	export let value: string | number = '';
 
-	$: console.log('here', value);
-
 	$: {
 		if (mask) {
 			mask.unmaskedValue = String(value);
@@ -95,7 +93,6 @@
 				e.currentTarget.value = String(value);
 			} else {
 				onchange(mask.unmaskedValue);
-				console.log('blurring ...', mask.unmaskedValue);
 				e.currentTarget.value = String(value);
 			}
 		}}

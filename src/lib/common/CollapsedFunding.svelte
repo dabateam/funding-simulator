@@ -5,7 +5,10 @@
 	import type { PricedRound, Safe } from '$lib/types';
 
 	import DeleteIcon from '$lib/icons/DeleteIcon.svelte';
-	import { getTableTotalShares } from '$lib/calculations';
+	import { getSafesValuations, getSafesWithMFN, getTableTotalShares } from '$lib/calculations';
+
+	$: pricedRounds = $events.filter((e) => e.type === 'priced') as PricedRound[];
+	$: firstPricedRound = pricedRounds[0] || null;
 
 	export let data: PricedRound | Safe;
 	export let index: number;
@@ -102,11 +105,16 @@
 		}
 		return res;
 	};
+
+	$: effectiveValuation = firstPricedRound
+		? getSafesWithMFN(getSafesValuations(firstPricedRound)).find((el) => el.name === data.name)
+				?.valuation || null
+		: null;
 </script>
 
 <div
 	transition:box_reverse
-	class=" transition-none duration-0 flex flex-col align-center justify-center group px-11"
+	class=" transition-none duration-0 flex flex-col align-center justify-center group px-11 max-md:px-0"
 >
 	<div class={cn('text-center text-xs text-textLight my-2', sameNameError && 'text-red-500')}>
 		{sameNameError
@@ -162,10 +170,12 @@
 	<div class="text-xs p-3 text-center w-fit mx-auto text-textLight bg-bg">
 		{#if data.type !== 'safe'}
 			Diluted by {getDilutedBy()}% {getIncludingMessage()}
+		{:else if effectiveValuation}
+			Effective valuation: {formatAmount(effectiveValuation)}
 		{/if}
 	</div>
 	<button
-		class="right-[0] text-textLight top-[40px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute"
+		class="max-sm:hidden right-[0] text-textLight top-[40px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute"
 		on:click={deleteEvent}><DeleteIcon /></button
 	>
 </div>

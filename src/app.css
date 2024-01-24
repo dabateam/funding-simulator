@@ -124,6 +124,12 @@ body {
 	-webkit-font-smoothing: antialiased;
 }
 
+@media screen and (max-width: 640px) {
+	body {
+		position: relative;
+	}
+}
+
 #content {
 	min-height: 100vh;
 	background: var(--background-color);

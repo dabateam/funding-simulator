@@ -60,7 +60,7 @@
 		<div class=" text-xl">Founders</div>
 		<div class="text-textLight text-xl mb-10">and their equity</div>
 
-		<div class="flex gap-4" id="founders">
+		<div class="flex gap-4 flex-wrap justify-center" id="founders">
 			{#each $founders as founder, fIndex (founder.id)}
 				<div
 					class="flex flex-col align-top h-[140px] !transition-none"

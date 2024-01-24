@@ -48,33 +48,35 @@ const getFirstTable = (): CapTable => {
 	return table;
 };
 
+export const getSafesValuations = (firstPricedRound: PricedRound) => (get(_events).filter((e) => e.type === 'safe') as Safe[]).map((safe) => {
+	let valuation = firstPricedRound.valuation;
+	if (safe.valCap && safe.discount)
+		valuation = Math.min(safe.valCap, firstPricedRound.valuation * (1 - safe.discount / 100));
+	if (safe.valCap && !safe.discount) valuation = safe.valCap;
+	if (!safe.valCap && safe.discount)
+		valuation = firstPricedRound.valuation * (1 - safe.discount / 100);
+	return {
+		...safe,
+		valuation
+	} as Safe & { valuation: number };
+});
+
+export const getSafesWithMFN = (safes: (Safe & { valuation: number })[]) => safes.map((safe, safeIndex) => {
+	if (!safe.mfn) return safe;
+	const searchList = safes.slice(safeIndex);
+	const highestValuation = searchList.reduce((max, current) => {
+		return current.valuation <= max ? current.valuation : max;
+	}, safe.valuation);
+	return {
+		...safe,
+		valuation: highestValuation
+	};
+});
+
 export const getSafes = (firstPricedRound: PricedRound, totalShares: number) => {
 	const safesTables: CapTable = {};
 
-	const safes = (get(_events).filter((e) => e.type === 'safe') as Safe[]).map((safe) => {
-		let valuation = firstPricedRound.valuation;
-		if (safe.valCap && safe.discount)
-			valuation = Math.min(safe.valCap, firstPricedRound.valuation * (1 - safe.discount / 100));
-		if (safe.valCap && !safe.discount) valuation = safe.valCap;
-		if (!safe.valCap && safe.discount)
-			valuation = firstPricedRound.valuation * (1 - safe.discount / 100);
-		return {
-			...safe,
-			valuation
-		} as Safe & { valuation: number };
-	});
-
-	const safesWithMFN = safes.map((safe, safeIndex) => {
-		if (!safe.mfn) return safe;
-		const searchList = safes.slice(safeIndex);
-		const highestValuation = searchList.reduce((max, current) => {
-			return current.valuation <= max ? current.valuation : max;
-		}, safe.valuation);
-		return {
-			...safe,
-			valuation: highestValuation
-		};
-	});
+	const safesWithMFN = getSafesWithMFN(getSafesValuations(firstPricedRound))
 
 	const totalSafesDilution = safesWithMFN.reduce((prev, curr) => {
 		return prev + curr.amount / curr.valuation;
