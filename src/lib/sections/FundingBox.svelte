@@ -175,7 +175,7 @@
 		[];
 </script>
 
-<div class="group relative flex flex-col items-center h-[120px] __event max-sm:h-fit">
+<div class="group relative flex flex-col items-center h-[120px] __event max-sm:h-[140px]">
 	<div
 		class={cn(
 			'absolute -right-[10px] top-[calc(50%_+_1.5px)] -translate-y-[50%] translate-x-[100%] group-hover:block hidden max-sm:group-hover:hidden ',

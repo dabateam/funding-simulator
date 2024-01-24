@@ -6,10 +6,9 @@
 </script>
 
 <div class="relative flex flex-col items-center group bg-bg">
-	<div class={cn('absolute -right-[20px] top-[50%] -translate-y-[50%] translate-x-[100%]')}>
-		<FloatingTable position={$tables.length - 2} />
-	</div>
-	<div class="pt-10 pb-0 rounded-3xl border-[4px] border-borderLight overflow-hidden">
+	<div
+		class="pt-10 pb-0 rounded-3xl border-[4px] border-borderLight overflow-hidden max-sm:w-[340px]"
+	>
 		<div class="px-16 flex flex-col items-center">
 			<div class="text-2xl text-textLight relative">Congratulations!</div>
 			<div class="mt-8 mb-2 text-sm">You just sold your startup for</div>
@@ -21,7 +20,7 @@
 				width="220"
 				white
 			/>
-			<div class=" mt-10">
+			<div class=" mt-10 max-sm:text-center">
 				You kept <span
 					class="inline-block rounded-lg p-1 px-1.5 mx-1 border-[2px] border-borderDark [box-shadow:0px_1px_theme(colors.borderDark)]"
 					>{parseFloat($finalYouShares.toFixed(1))}%</span
@@ -40,8 +39,15 @@
 		on:click={() => {
 			$exit = null;
 		}}
-		class="p-2 px-3 rounded-lg hover:bg-borderLight mt-2 active:bg-borderDark text-textLight text-sm opacity-0 group-hover:opacity-100"
+		class="p-2 px-3 rounded-lg hover:bg-borderLight mt-2 active:bg-borderDark text-textLight text-sm opacity-0 group-hover:opacity-100 max-sm:!opacity-100"
 	>
 		Cancel exit
 	</button>
+	<div
+		class={cn(
+			'max-sm:static max-sm:mt-10 max-sm:translate-x-0 max-sm:translate-y-0 absolute -right-[20px] top-[50%] -translate-y-[50%] translate-x-[100%]'
+		)}
+	>
+		<FloatingTable position={$tables.length - 2} />
+	</div>
 </div>

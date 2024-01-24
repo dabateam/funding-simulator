@@ -185,7 +185,7 @@
 		{/if}
 	</div>
 	<button
-		class="max-sm:hidden right-[0] text-textLight top-[40px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute"
+		class=" max-sm:opacity-70 block right-[0] text-textLight top-[40px] hover:bg-borderLight group-hover:opacity-100 opacity-0 active:bg-borderDark rounded-lg p-2.5 absolute max-sm:right-[50%] max-sm:translate-x-[50%] max-sm:top-[90px] max-sm:scale-90"
 		on:click={deleteEvent}><DeleteIcon /></button
 	>
 </div>
