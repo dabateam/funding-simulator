@@ -69,7 +69,7 @@
 			<div class="flex w-full max-sm:flex-col">
 				<div
 					class={cn(
-						'flex-1 flex flex-col items-center py-6 border-y-[3px] border-borderLight w-full bg-white border-r-[3px] max-sm:border-b-[3px] group-hover:border-r-0',
+						'flex-1 flex flex-col items-center py-6 border-y-[3px] border-borderLight w-full bg-white border-r-[3px] max-sm:border-b-[3px] max-sm:border-r-0',
 						!data.reserved && 'opacity-50'
 					)}
 				>
