@@ -335,9 +335,25 @@
 				</div>
 				<div class="flex justify-center max-sm:flex-col max-sm:items-center">
 					{#if data.type === 'safe'}
-						<Select bind:checked={data.mfn} class="mt-5 " label="MFN provision" />
+						<div
+							use:tippy={{
+								arrow: false,
+								content:
+									'Most favored nation: If a future safe has a better deal (lower valuation), this safe gets the same.'
+							}}
+						>
+							<Select bind:checked={data.mfn} class="mt-5 " label="MFN provision" />
+						</div>
 					{/if}
-					<Select bind:checked={data.proRata} class="mt-5 max-sm:mt-2" label="Pro-rata rights" />
+					<div
+						use:tippy={{
+							arrow: false,
+							content:
+								'This investor will have the right to invest in future rounds to keep their ownership % constant'
+						}}
+					>
+						<Select bind:checked={data.proRata} class="mt-5 max-sm:mt-2" label="Pro-rata rights" />
+					</div>
 				</div>
 			</div>
 
