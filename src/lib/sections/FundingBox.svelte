@@ -266,6 +266,7 @@
 							<div
 								class="text-center mb-3"
 								use:tippy={{
+									maxWidth: 220,
 									content:
 										'Investors usually expect you to have available options after the round.',
 									arrow: false
@@ -338,6 +339,7 @@
 						<div
 							use:tippy={{
 								arrow: false,
+								maxWidth: 220,
 								content:
 									'Most favored nation: If a future safe has a better deal (lower valuation), this safe gets the same.'
 							}}
@@ -348,6 +350,7 @@
 					<div
 						use:tippy={{
 							arrow: false,
+							maxWidth: 220,
 							content:
 								'This investor will have the right to invest in future rounds to keep their ownership % constant'
 						}}
