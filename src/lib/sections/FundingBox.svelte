@@ -168,6 +168,11 @@
 
 	$: showOptionsLine = dilutions && dilutions.options > 0;
 	$: showSafesLine = dilutions && dilutions.safes > 0;
+
+	$: participatingProRatas =
+		(data.type === 'priced' &&
+			data.participations.filter((e) => previousInvestorsWithProRata.includes(e))) ||
+		[];
 </script>
 
 <div class="group relative flex flex-col items-center h-[120px] __event">
@@ -342,7 +347,7 @@
 							>
 								<div class="">{data.name} investors</div>
 								<div class="flex">
-									<div class="w-[55px] text-right text-green-600 opacity-50">
+									<div class="w-[55px] text-right text-green-600">
 										+{formatAmount(Math.ceil(dilutions?.investors || 0))}
 									</div>
 
@@ -383,16 +388,16 @@
 										'relative  hover:bg-borderLight cursor-pointer px-3 py-2 flex items-center justify-between gap-4 border-b-2 border-borderDark last:border-none rounded-[10px] rounded-t-none active:bg-borderDark pr-4'
 									)}
 								>
-									{#if data.participations.length === 0}
+									{#if participatingProRatas.length === 0}
 										<div>No pro-ratas exercised in this round.</div>
 									{:else}
 										<div class="">
-											{data.participations.length === 1
-												? `${previousInvestorsWithProRata[0]} pro-rata `
-												: `${previousInvestorsWithProRata.length}x others (pro-rata)`}
+											{participatingProRatas.length === 1
+												? `${participatingProRatas[0]} pro-rata `
+												: `${participatingProRatas.length} others (pro-rata)`}
 										</div>
 										<div class="flex">
-											<div class="w-[55px] text-right text-green-600 opacity-50">
+											<div class="w-[55px] text-right text-green-600">
 												+{formatAmount(Math.ceil(dilutions?.proratas || 0))}
 											</div>
 

@@ -2,12 +2,13 @@
 	import { box, box_reverse, cn } from '$lib';
 	import Input from '$lib/common/Input.svelte';
 	import DeleteIcon from '$lib/icons/DeleteIcon.svelte';
-	import { events } from '$lib/store';
+	import { events, tables } from '$lib/store';
 
 	import type { Options } from '$lib/types';
 
 	import { onMount } from 'svelte';
 	import FloatingTable from './FloatingTable.svelte';
+	import { AVAILABLE_OPTIONS_LABEL, getTableTotalShares } from '$lib/calculations';
 
 	export let data: Options;
 	export let index: number;
@@ -29,6 +30,15 @@
 	const deleteEvent = () => {
 		$events = $events.filter((_, i) => i !== index);
 	};
+
+	$: available =
+		(($tables[index]?.[AVAILABLE_OPTIONS_LABEL] || 0) / getTableTotalShares($tables[index + 1])) *
+		100;
+
+	$: remaining =
+		(($tables[index + 1]?.[AVAILABLE_OPTIONS_LABEL] || 0) /
+			getTableTotalShares($tables[index + 1])) *
+		100;
 </script>
 
 <div class="relative h-10 group px-11 __event">
@@ -52,8 +62,8 @@
 				<FloatingTable position={index} />
 			</div>
 			<div class="text-sm h-12 text-textLight flex items-center justify-center gap-1.5">
-				Current available option pool is
-				<span class="text-primaryOrange">15% </span>
+				Previous available option pool is
+				<span class="text-primaryOrange">{parseFloat(Math.abs(available).toFixed(1))}% </span>
 				of all shares
 			</div>
 			<div class="flex w-full">
@@ -72,6 +82,9 @@
 						type="percent"
 						value={data.reserved}
 						onchange={(value) => {
+							if (parseFloat(value) + available < data.amount) {
+								data.amount = parseFloat(value) + available;
+							}
 							data.reserved = parseFloat(value);
 						}}
 					/>
@@ -90,14 +103,17 @@
 						type="percent"
 						value={data.amount}
 						onchange={(value) => {
-							data.amount = parseFloat(value);
+							data.amount =
+								parseFloat(value) > available + data.reserved
+									? available + data.reserved
+									: parseFloat(value);
 						}}
 					/>
 				</div>
 			</div>
 			<div class="text-sm h-12 text-textLight flex items-center justify-center gap-1.5">
-				Option pool remaining before next round is
-				<span class="text-primaryOrange">15%</span>
+				Option pool that will remain is
+				<span class="text-primaryOrange">{parseFloat(Math.abs(remaining).toFixed(1))}%</span>
 			</div>
 		</div>
 	{:else}
@@ -110,14 +126,14 @@
 				<span class="mr-2 text-textLight">Options</span>
 				{#if data.reserved}
 					Reserve
-					<span class="text-primaryOrange">{data.reserved}%</span>
+					<span class="text-primaryOrange">{parseFloat(data.reserved.toFixed(1))}%</span>
 				{/if}
 				{#if data.reserved && data.amount}
 					,
 				{/if}
 				{#if data.amount}
 					Give
-					<span class="text-primaryOrange">{data.amount}%</span> to employees
+					<span class="text-primaryOrange">{parseFloat(data.amount.toFixed(1))}%</span> to employees
 				{/if}
 			</div>
 		</div>
