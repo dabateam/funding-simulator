@@ -189,7 +189,7 @@
 			id="funding-box"
 			out:box
 			in:box={{ delay: 50 }}
-			class="transition-none duration-0 origin-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] border border-white rounded-2xl funding-box"
+			class="transition-none duration-0 origin-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] border border-white rounded-2xl funding-box max-sm:w-[340px]"
 		>
 			<div
 				class="absolute right-[0] top-[calc(50%_+_11px)] -translate-y-[50%] translate-x-[calc(100%_+_20px)] max-sm:hidden"
@@ -427,6 +427,12 @@
 							{/if}
 						</div>
 					</div>
+					<div
+						class="hidden py-10 rounded-xl bg-bg w-full max-sm:flex flex-col items-center justify-center"
+					>
+						<div class="text-center text-textLight text-xs mb-3">Resulting cap table</div>
+						<FloatingTable position={index} />
+					</div>
 				{:else}
 					<div class="bg-bg h-[180px] flex gap-2 rounded-b-2xl max-sm:flex-col max-sm:h-fit">
 						<div class="w-[40px] pt-5 px-5 shrink-0">
@@ -438,13 +444,13 @@
 								>{'<-'}</button
 							>
 						</div>
-						<div class="w-[200px] pt-5 shrink-0">
+						<div class="w-[200px] pt-5 shrink-0 max-sm:pl-5 max-sm:w-full max-sm:pt-2">
 							<div class="mb-2">Other investors</div>
 							<div class="text-xs leading-5 text-textLight">
 								Who else is investing in this round? (through their pro-rata right)
 							</div>
 						</div>
-						<div class="py-3 flex flex-wrap content-start">
+						<div class="py-3 flex flex-wrap content-start max-sm:pl-2">
 							{#each previousInvestorsWithProRata as investor}
 								<Select
 									label={investor}
@@ -459,6 +465,12 @@
 				<div class="bg-bg flex align-center justify-center py-5 rounded-b-2xl">
 					<span class="mr-3 text-textLight">Safe type</span>
 					<span>{getSafeType(data)}</span>
+				</div>
+				<div
+					class="hidden py-10 rounded-xl bg-bg w-full max-sm:flex flex-col items-center justify-center"
+				>
+					<div class="text-center text-textLight text-xs mb-3">Resulting cap table</div>
+					<FloatingTable position={index} />
 				</div>
 			{/if}
 		</div>
