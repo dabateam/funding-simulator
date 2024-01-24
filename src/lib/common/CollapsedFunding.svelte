@@ -136,7 +136,7 @@
 	<div
 		on:click
 		class={cn(
-			'cursor-pointer hover:border-borderDark active:border-borderDarkHover p-[10px] pr-5 text-sm flex gap-5 border-2 rounded-xl border-borderLight bg-white leading-[1.2] max-sm:w-[340px] max-sm:justify-between max-sm:p-5 max-sm:py-3',
+			'cursor-pointer hover:border-borderDark active:border-borderDarkHover p-[10px] pr-5 text-sm flex gap-5 border-2 rounded-xl border-borderLight bg-white leading-[1.2] max-sm:w-[350px] max-sm:justify-between max-sm:p-5 max-sm:py-3',
 			sameNameError && 'border-red-200 hover:border-red-300 active:border-red-300'
 		)}
 	>

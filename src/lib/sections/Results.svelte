@@ -7,7 +7,7 @@
 
 <div class="relative flex flex-col items-center group bg-bg">
 	<div
-		class="pt-10 pb-0 rounded-3xl border-[4px] border-borderLight overflow-hidden max-sm:w-[340px]"
+		class="pt-10 pb-0 rounded-3xl border-[4px] border-borderLight overflow-hidden max-sm:w-[350px]"
 	>
 		<div class="px-16 flex flex-col items-center">
 			<div class="text-2xl text-textLight relative">Congratulations!</div>

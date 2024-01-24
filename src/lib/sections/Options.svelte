@@ -54,7 +54,7 @@
 			id="options-box"
 			out:box
 			in:box={{ delay: 50 }}
-			class="w-[500px] max-sm:w-[340px] bg-bg transition-none duration-0 origin-center flex flex-col items-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] funding-box border border-white rounded-2xl"
+			class="w-[500px] max-sm:w-[350px] bg-bg transition-none duration-0 origin-center flex flex-col items-center absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] z-[21] funding-box border border-white rounded-2xl"
 		>
 			<div
 				class="max-sm:hidden absolute right-[0] top-[calc(50%_+_11px)] -translate-y-[50%] translate-x-[calc(100%_+_20px)]"
@@ -120,7 +120,7 @@
 		<div
 			on:click={() => (show = true)}
 			transition:box_reverse
-			class="bg-bg text-sm cursor-pointer hover:border-borderDarkHover active:border-borderDark border-2 border-borderDark flex items-center gap-3 py-2 px-3 rounded-xl mx-auto w-fit max-sm:w-[340px] max-sm:justify-center"
+			class="bg-bg text-sm cursor-pointer hover:border-borderDarkHover active:border-borderDark border-2 border-borderDark flex items-center gap-3 py-2 px-3 rounded-xl mx-auto w-fit max-sm:w-[350px] max-sm:justify-center"
 		>
 			<div>
 				<span class="mr-2 text-textLight max-sm:block max-sm:text-center max-sm:mb-1">Options</span>
